@@ -12,13 +12,21 @@ defmodule ExConfig do
           nil -> ops = []
           block -> ops = [block]
         end
+        as = opts[:as]
+        ops = lc op inlist ops do
+          quote do 
+            case (v = unquote(op)) do
+              unquote(module)[] ->
+                unquote(as) = v
+              _ ->
+                :ok
+            end
+          end
+        end
         quote do
-          require Xonad    
-          ExConfig.object(Xonad.list do
-                            unquote(module)
-                            unquote(opts[:as]) = unquote(module).new
-                            unquote_splicing(ops)
-                          end)
+          unquote(as) = unquote(module).new
+          unquote(as) # suppresses unused variable warning
+          unquote_splicing(ops)
         end
     end
   end

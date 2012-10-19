@@ -4,6 +4,7 @@ defmodule MyConfig do
   use ExConfig.Object
   defproperty http_port
   defproperty https_port, default: 8081
+  defproperty nodes, default: []
 end
 
 defmodule ExconfigTest do
@@ -30,6 +31,16 @@ defmodule ExconfigTest do
     assert config.https_port == 8082    
   end
 
+  test "setting list values" do
+    config =
+    MyConfig.config as: config do
+       config.prepend_nodes ["node1"]
+       config.prepend_nodes ["node2"]
+    end
+
+    assert config.nodes == ["node2", "node1"]
+  end
+
   test "default value" do
     config =
     MyConfig.config as: config do
@@ -44,7 +55,7 @@ defmodule ExconfigTest do
       port = 8079 + 1
       config.http_port port
     end  
-    
+
     assert config.http_port == 8080    
   end
 

@@ -8,12 +8,11 @@ defmodule Exconfig.Mixfile do
   end
 
   def application do
-    [applications: :xonad]
+    []
   end
 
   defp deps do
     [ 
-     {:xonad, github: "yrashk/xonad"},
     ]
   end
 end
