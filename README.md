@@ -19,10 +19,3 @@ MyConfig.config do
    config.http_port 8080
 end
 ```
-
-You can also easily use it in conjunction with configuration files:
-
-```elixir
-content = File.read! "config.exs"
-MyConfig.config string: content
-```

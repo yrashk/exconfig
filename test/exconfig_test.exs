@@ -106,23 +106,4 @@ defmodule ExconfigTest do
 
     assert config.some.http_port == 8080
   end
-
-  test "setting a config from a string (file contents)" do
-    config =
-    MyConfig.config string: %b{
-       config.http_port 8080
-    }
-    assert config.http_port == 8080
-  end
-
-  test "setting a config from a multiline string (file contents)" do
-    config =
-    MyConfig.config string: %b{
-       config.http_port 8080
-       config.https_port 8082
-    }
-    assert config.http_port == 8080
-    assert config.https_port == 8082
-  end
-
 end
