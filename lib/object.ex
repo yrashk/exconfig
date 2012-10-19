@@ -5,6 +5,15 @@ defmodule ExConfig.Object do
       @before_compile ExConfig.Object
 
       Module.register_attribute __MODULE__, :property
+
+      defmacro config(opts, [do: block]) do
+        ExConfig.config(__MODULE__, Keyword.merge(opts, [do: block]), __CALLER__)
+      end
+
+      defmacro config(opts) do
+        ExConfig.config(__MODULE__, opts, __CALLER__)
+      end
+
     end
   end
 

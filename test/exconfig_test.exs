@@ -8,11 +8,11 @@ end
 
 defmodule ExconfigTest do
   use ExUnit.Case
-  require ExConfig
+  require MyConfig
 
   test "setting a value" do
     config =
-    ExConfig.config MyConfig, as: config do
+    MyConfig.config as: config do
        config.http_port 8080
     end
 
@@ -21,7 +21,7 @@ defmodule ExconfigTest do
 
   test "setting multiple values" do
     config =
-    ExConfig.config MyConfig, as: config do
+    MyConfig.config as: config do
        config.http_port 8080
        config.https_port 8082
     end
@@ -29,10 +29,10 @@ defmodule ExconfigTest do
     assert config.http_port == 8080
     assert config.https_port == 8082    
   end
-  
+
   test "default value" do
     config =
-    ExConfig.config MyConfig, as: config do
+    MyConfig.config as: config do
     end
 
     assert config.https_port == 8081
@@ -40,7 +40,7 @@ defmodule ExconfigTest do
 
   test "setting a config from a string (file contents)" do
     config =
-    ExConfig.config MyConfig, as: config, string: %b{
+    MyConfig.config as: config, string: %b{
        config.http_port 8080
     }
     assert config.http_port == 8080
@@ -48,7 +48,7 @@ defmodule ExconfigTest do
 
   test "setting a config from a multiline string (file contents)" do
     config =
-    ExConfig.config MyConfig, as: config, string: %b{
+    MyConfig.config as: config, string: %b{
        config.http_port 8080
        config.https_port 8082
     }
