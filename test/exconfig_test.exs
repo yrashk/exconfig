@@ -6,6 +6,7 @@ defmodule MyConfig do
   defproperty https_port, default: 8081
   defproperty nodes, default: []
   defproperty name, default: [], accumulate: true
+  defproperty some
 end
 
 defmodule MyOtherConfig do
@@ -84,6 +85,7 @@ defmodule ExconfigTest do
 
     assert config.http_port == 8080
   end  
+
   test "allowing non-config code" do
     config =
     MyConfig.config do
@@ -92,6 +94,17 @@ defmodule ExconfigTest do
     end  
 
     assert config.http_port == 8080    
+  end
+
+  test "included config" do
+    config =
+    MyConfig.config do
+      config.some (MyOtherConfig.config do
+        other_config.http_port 8080
+      end)
+    end     
+
+    assert config.some.http_port == 8080
   end
 
   test "setting a config from a string (file contents)" do
