@@ -94,7 +94,6 @@ defmodule ExconfigTest do
     assert config.http_port == 8080    
   end
 
-""
   test "setting a config from a string (file contents)" do
     config =
     MyConfig.config string: %b{
