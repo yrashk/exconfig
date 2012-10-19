@@ -38,6 +38,16 @@ defmodule ExconfigTest do
     assert config.https_port == 8081
   end
 
+  test "allowing non-config code" do
+    config =
+    MyConfig.config as: config do
+      port = 8079 + 1
+      config.http_port port
+    end  
+    
+    assert config.http_port == 8080    
+  end
+
   test "setting a config from a string (file contents)" do
     config =
     MyConfig.config as: config, string: %b{

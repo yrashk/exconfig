@@ -26,7 +26,11 @@ defmodule ExConfig do
   def object([module, object|rest]), do: object(module, object, rest)
   defp object(_module, object, []), do: object
   defp object(module, object, [update|rest]) do
-    diff = (update.to_keywords -- module.new.to_keywords) -- object.to_keywords
-    object(module, object.update(diff), rest)
+    if is_tuple(update) and elem(update, 0) == module do
+      diff = (update.to_keywords -- module.new.to_keywords) -- object.to_keywords
+      object(module, object.update(diff), rest)
+    else
+      object(module, object, rest)
+    end
   end
 end
