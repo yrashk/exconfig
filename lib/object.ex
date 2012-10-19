@@ -26,9 +26,30 @@ defmodule ExConfig.Object do
     end
   end
 
+  def __accumulate__(property) do
+    quote do
+      def unquote(property).(value, config) do
+        super(unquote(property)(config) ++ [value], config)
+      end
+    end  
+  end
+
   defmacro __before_compile__(_) do
     quote do
-      Record.deffunctions __ENV__, (lc {property, opts, _} inlist @property, do: {property, opts[:default]})
+      props = 
+      lc {property, opts, _} inlist @property do
+        {property, opts[:default]}
+      end
+
+      Record.deffunctions __ENV__, props
+
+      lc {property, opts, _} inlist @property do
+        if opts[:accumulate] do
+          defoverridable [{property, 2}] 
+          quoted = ExConfig.Object.__accumulate__(property)
+          Module.eval_quoted __MODULE__, quoted, [property: property]
+        end
+      end
 
       defmacro config(opts, [do: block]) do
         ExConfig.config(__MODULE__, Keyword.merge([as: @as], Keyword.merge(opts, [do: block])), __CALLER__)

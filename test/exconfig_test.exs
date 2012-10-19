@@ -5,6 +5,7 @@ defmodule MyConfig do
   defproperty http_port
   defproperty https_port, default: 8081
   defproperty nodes, default: []
+  defproperty name, default: [], accumulate: true
 end
 
 defmodule MyOtherConfig do
@@ -46,6 +47,16 @@ defmodule ExconfigTest do
     end
 
     assert config.nodes == ["node2", "node1"]
+  end
+
+  test "setting accumulated values" do
+    config =
+    MyConfig.config do
+       config.name "Alice"
+       config.name "Bob"
+    end
+
+    assert config.name == ["Alice", "Bob"]
   end
 
   test "default value" do
