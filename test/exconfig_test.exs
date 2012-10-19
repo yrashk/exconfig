@@ -7,13 +7,20 @@ defmodule MyConfig do
   defproperty nodes, default: []
 end
 
+defmodule MyOtherConfig do
+  use ExConfig.Object
+  defproperty http_port
+  default_as other_config
+end
+
 defmodule ExconfigTest do
   use ExUnit.Case
   require MyConfig
-
+  require MyOtherConfig
+  
   test "setting a value" do
     config =
-    MyConfig.config as: config do
+    MyConfig.config do
        config.http_port 8080
     end
 
@@ -22,7 +29,7 @@ defmodule ExconfigTest do
 
   test "setting multiple values" do
     config =
-    MyConfig.config as: config do
+    MyConfig.config do
        config.http_port 8080
        config.https_port 8082
     end
@@ -33,7 +40,7 @@ defmodule ExconfigTest do
 
   test "setting list values" do
     config =
-    MyConfig.config as: config do
+    MyConfig.config do
        config.prepend_nodes ["node1"]
        config.prepend_nodes ["node2"]
     end
@@ -43,15 +50,32 @@ defmodule ExconfigTest do
 
   test "default value" do
     config =
-    MyConfig.config as: config do
+    MyConfig.config do
     end
 
     assert config.https_port == 8081
   end
 
+  test "using non-default as: " do
+    config =
+    MyConfig.config as: app do
+       app.http_port 8080
+    end
+
+    assert config.http_port == 8080
+  end  
+
+  test "specifying non-default as: " do
+    config =
+    MyOtherConfig.config do
+       other_config.http_port 8080
+    end
+
+    assert config.http_port == 8080
+  end  
   test "allowing non-config code" do
     config =
-    MyConfig.config as: config do
+    MyConfig.config do
       port = 8079 + 1
       config.http_port port
     end  
@@ -59,9 +83,10 @@ defmodule ExconfigTest do
     assert config.http_port == 8080    
   end
 
+""
   test "setting a config from a string (file contents)" do
     config =
-    MyConfig.config as: config, string: %b{
+    MyConfig.config string: %b{
        config.http_port 8080
     }
     assert config.http_port == 8080
@@ -69,7 +94,7 @@ defmodule ExconfigTest do
 
   test "setting a config from a multiline string (file contents)" do
     config =
-    MyConfig.config as: config, string: %b{
+    MyConfig.config string: %b{
        config.http_port 8080
        config.https_port 8082
     }

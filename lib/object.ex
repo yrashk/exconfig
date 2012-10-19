@@ -5,14 +5,9 @@ defmodule ExConfig.Object do
       @before_compile ExConfig.Object
 
       Module.register_attribute __MODULE__, :property
+      Module.register_attribute __MODULE__, :as, persist: false, accumulate: false
 
-      defmacro config(opts, [do: block]) do
-        ExConfig.config(__MODULE__, Keyword.merge(opts, [do: block]), __CALLER__)
-      end
-
-      defmacro config(opts) do
-        ExConfig.config(__MODULE__, opts, __CALLER__)
-      end
+      default_as config
 
     end
   end
@@ -25,9 +20,23 @@ defmodule ExConfig.Object do
     end
   end
 
+  defmacro default_as({name, line, _}) do
+    quote do
+      @as {unquote(name), unquote(line), nil}
+    end
+  end
+
   defmacro __before_compile__(_) do
     quote do
       Record.deffunctions __ENV__, (lc {property, opts, _} inlist @property, do: {property, opts[:default]})
+
+      defmacro config(opts, [do: block]) do
+        ExConfig.config(__MODULE__, Keyword.merge([as: @as], Keyword.merge(opts, [do: block])), __CALLER__)
+      end
+
+      defmacro config(opts) do
+        ExConfig.config(__MODULE__, Keyword.merge([as: @as], opts), __CALLER__)
+      end      
     end
   end
 end
