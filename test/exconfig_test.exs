@@ -91,6 +91,7 @@ defmodule ExconfigTest do
     MyConfig.config do
       port = 8079 + 1
       config.http_port port
+      100 + 100 # this is to ensure that the last value might not be the config
     end  
 
     assert config.http_port == 8080    

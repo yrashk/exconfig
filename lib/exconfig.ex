@@ -13,7 +13,7 @@ defmodule ExConfig do
           unquote(module)[] ->
             unquote(as) = v
           _ ->
-            :ok
+            unquote(as)
         end
       end
     end
