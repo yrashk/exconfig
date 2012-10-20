@@ -28,3 +28,8 @@ ExConfig can be used to read config files as well:
 ```elixir
 config = MyConfig.file! "config.exs"
 ```
+
+### The "How"
+
+There's just a big of magic happening to make the above thing possible. The `config`
+macro wraps every expression in your `do` block with a simple check: if the return value is a MyConfig[] record, fold over it; if not — continue as is. As a result, the accumulated value is the full config.
