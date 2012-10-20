@@ -57,7 +57,14 @@ defmodule ExConfig.Object do
 
       defmacro config(opts) do
         ExConfig.config(__MODULE__, Keyword.merge([as: @as], opts), __CALLER__)
-      end      
+      end    
+
+      def file!(file) do
+        content = File.read!(file)
+        content = "require #{inspect __MODULE__}\n" <> content
+        {config, _} = Code.eval(content)
+        config
+      end
     end
   end
 end

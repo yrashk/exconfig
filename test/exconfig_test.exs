@@ -106,4 +106,16 @@ defmodule ExconfigTest do
 
     assert config.some.http_port == 8080
   end
+
+  test "reading from file" do
+    File.write! "__test_config__.exs", %b|
+    MyConfig.config do
+      config.http_port 9090
+    end
+    |
+    config = MyConfig.file!("__test_config__.exs")
+    assert config.http_port == 9090
+    File.rm "__test_config__.exs"
+  end
+  
 end

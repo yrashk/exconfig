@@ -26,6 +26,5 @@ The value returned by the above code will be a `MyConfig` record with `http_port
 ExConfig can be used to read config files as well:
 
 ```elixir
-string = File.read! "config.exs"
-{config, _} = Code.eval "require MyConfig\n#{string}"
+config = MyConfig.file! "config.exs"
 ```
