@@ -47,7 +47,7 @@ defmodule ExConfig.Object do
         if opts[:accumulate] do
           defoverridable [{property, 2}] 
           quoted = ExConfig.Object.__accumulate__(property)
-          Module.eval_quoted __MODULE__, quoted, [property: property]
+          Module.eval_quoted __MODULE__, quoted
         end
       end
 
