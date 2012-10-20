@@ -41,7 +41,7 @@ defmodule ExConfig.Object do
         {property, opts[:default]}
       end
 
-      Record.deffunctions __ENV__, props
+      Record.deffunctions props, __ENV__
 
       lc {property, opts, _} inlist @property do
         if opts[:accumulate] do
