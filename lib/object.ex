@@ -4,6 +4,8 @@ defmodule ExConfig.Object do
       import ExConfig.Object
       @before_compile ExConfig.Object
 
+      use ExConfig.Server
+
       Module.register_attribute __MODULE__, :property
       Module.register_attribute __MODULE__, :as, persist: false, accumulate: false
 

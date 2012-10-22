@@ -13,6 +13,7 @@ defmodule Exconfig.Mixfile do
 
   defp deps do
     [ 
+      {:genx, github: "yrashk/genx"},
     ]
   end
 end
