@@ -1,6 +1,6 @@
 defmodule ExConfig.Server do
   defmacro __using__(_) do
-    quote do
+    quote location: :keep do
       use GenEvent.Behaviour
       import GenX.GenEvent
       alias :gen_event, as: GenEvent
