@@ -10,9 +10,8 @@ defmodule MyConfig do
 end
 
 defmodule MyOtherConfig do
-  use ExConfig.Object
+  use ExConfig.Object, default_as: :other_config
   defproperty http_port
-  default_as other_config
 end
 
 defmodule ExconfigTest do
@@ -29,6 +28,16 @@ defmodule ExconfigTest do
     assert config.http_port == 8080
   end
 
+  test "getting a value" do
+    config =
+    MyConfig.config do
+       config.http_port 8080
+       config.http_port config.http_port + 1
+    end
+
+    assert config.http_port == 8081
+  end
+
   test "setting multiple values" do
     config =
     MyConfig.config do
@@ -38,16 +47,6 @@ defmodule ExconfigTest do
 
     assert config.http_port == 8080
     assert config.https_port == 8082    
-  end
-
-  test "setting list values" do
-    config =
-    MyConfig.config do
-       config.prepend_nodes ["node1"]
-       config.prepend_nodes ["node2"]
-    end
-
-    assert config.nodes == ["node2", "node1"]
   end
 
   test "setting accumulated values" do
@@ -91,7 +90,7 @@ defmodule ExconfigTest do
     MyConfig.config do
       port = 8079 + 1
       config.http_port port
-      100 + 100 # this is to ensure that the last value might not be the config
+      _x = 100 + 100 # this is to ensure that the last value might not be the config
     end  
 
     assert config.http_port == 8080    
@@ -118,5 +117,5 @@ defmodule ExconfigTest do
     assert config.http_port == 9090
     File.rm "__test_config__.exs"
   end
-  
+
 end
