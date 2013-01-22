@@ -4,16 +4,10 @@ defmodule ExConfig.Object do
     quote do
       import ExConfig.Object
       @before_compile ExConfig.Object
-      
-      Module.register_attribute __MODULE__, :property
-      
-      @as unquote(default_as)
-    end
-  end
 
-  defmacro default_as({name, line, _}) do
-    quote do
-      @as {unquote(name), unquote(line), nil}
+      Module.register_attribute __MODULE__, :property
+
+      @as unquote(default_as)
     end
   end
 
@@ -30,7 +24,7 @@ defmodule ExConfig.Object do
       def unquote(property).(value, config) do
         super(unquote(property)(config) ++ [value], config)
       end
-    end  
+    end
   end
 
   def __call_server__(property) do
@@ -41,7 +35,7 @@ defmodule ExConfig.Object do
       def unquote(property).(server) do
         get_property(server.pid, unquote(property))
       end
-    end  
+    end
   end
 
   def __config__(name, block, module) do
@@ -60,7 +54,7 @@ defmodule ExConfig.Object do
   defmacro __before_compile__(_) do
     quote do
 
-      props = 
+      props =
       lc {property, opts, _} inlist @property do
         {property, opts[:default]}
       end
@@ -73,17 +67,17 @@ defmodule ExConfig.Object do
           {:ok, unquote(__CALLER__.module).new}
         end
 
-        defcall set_property(name, value), state: state do        
+        defcall set_property(name, value), state: state do
           state = apply(unquote(__CALLER__.module), name, [value, state])
           {:reply, state, state}
         end
 
-        defcall get_property(name), state: state do        
+        defcall get_property(name), state: state do
           value = apply(unquote(__CALLER__.module), name, [state])
           {:reply, value, state}
         end
 
-        defcall get_object, state: state do        
+        defcall get_object, state: state do
           {:reply, state, state}
         end
         defcast stop, state: state do
@@ -93,7 +87,7 @@ defmodule ExConfig.Object do
         Record.deffunctions [pid: nil], __ENV__
 
         lc {property, _, _} inlist Module.get_attribute(unquote(__CALLER__.module), :property) do
-          quoted = ExConfig.Object.__call_server__(property)      
+          quoted = ExConfig.Object.__call_server__(property)
           Module.eval_quoted __MODULE__, quoted
         end
 
@@ -103,14 +97,14 @@ defmodule ExConfig.Object do
 
       lc {property, opts, _} inlist @property do
         if opts[:accumulate] do
-          defoverridable [{property, 2}] 
+          defoverridable [{property, 2}]
           quoted = ExConfig.Object.__accumulate__(property)
           Module.eval_quoted __MODULE__, quoted
         end
       end
 
       defmacro config([do: block]) do
-        ExConfig.config({@as, 0, nil}, block, Server)
+        ExConfig.config({@as, [], nil}, block, Server)
       end
 
       defmacro config([as: name], [do: block]) do
