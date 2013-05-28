@@ -119,7 +119,7 @@ defmodule ExConfig.Object do
       def file!(file) do
         content = File.read!(file)
         content = "require #{inspect __MODULE__}\n" <> content
-        {config, _} = Code.eval(content)
+        {config, _} = Code.eval_string(content)
         config
       end
     end
