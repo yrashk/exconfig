@@ -4,6 +4,8 @@ defmodule ExConfig.Object do
     quote do
       import ExConfig.Object
       @before_compile ExConfig.Object
+      @shortdoc nil
+      @doc nil
 
       Module.register_attribute __MODULE__, :property
 
@@ -14,8 +16,8 @@ defmodule ExConfig.Object do
   defmacro defproperty({name, _, _}, opts // []) do
     quote line: :keep do
       @property {unquote(name), unquote(opts), [shortdoc: @shortdoc, doc: @doc]}
-      Module.delete_attribute __MODULE__, :doc
-      Module.delete_attribute __MODULE__, :shortdoc
+      @shortdoc nil
+      @doc nil
     end
   end
 
