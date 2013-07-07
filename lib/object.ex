@@ -7,7 +7,7 @@ defmodule ExConfig.Object do
       @shortdoc nil
       @doc nil
 
-      Module.register_attribute __MODULE__, :property
+      Module.register_attribute __MODULE__, :property, accumulate: true
 
       @as unquote(default_as)
     end
