@@ -108,7 +108,7 @@ defmodule ExconfigTest do
   end
 
   test "reading from file" do
-    File.write! "__test_config__.exs", %b|
+    File.write! "__test_config__.exs", %s|
     MyConfig.config do
       config.http_port 9090
     end
