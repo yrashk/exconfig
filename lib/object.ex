@@ -23,7 +23,7 @@ defmodule ExConfig.Object do
 
   def __accumulate__(property) do
     quote do
-      def unquote(property).(value, config) do
+      def unquote(property)(value, config) do
         super(unquote(property)(config) ++ [value], config)
       end
     end
@@ -31,10 +31,10 @@ defmodule ExConfig.Object do
 
   def __call_server__(property) do
     quote do
-      def unquote(property).(value, server) do
+      def unquote(property)(value, server) do
         set_property(server.pid, unquote(property), value)
       end
-      def unquote(property).(server) do
+      def unquote(property)(server) do
         get_property(server.pid, unquote(property))
       end
     end
